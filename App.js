@@ -1,23 +1,43 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import * as Font from 'expo-font';
 
 export default function App() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'CustomFont': require('./assets/fonts/FMCG-Regular.otf'),
+      });
+      setFontsLoaded(true);
+    }
+
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
-    <ImageBackground source={require('./assets/image.png')} style={styles.background}>
+    <ImageBackground source={require('./assets/image2.png')} style={styles.backgroundImage}>
       <View style={styles.container}>
         <TouchableOpacity style={styles.button}>
           <LinearGradient
             colors={[
               'rgba(255, 255, 255, 0.3)',
+              'rgba(255, 255, 255, 0.1)',
               'rgba(255, 255, 255, 0.0)',
               'rgba(255, 255, 255, 0.0)',
               'rgba(255, 255, 255, 0.0)',
               'rgba(255, 255, 255, 0.0)',
-              'rgba(255, 255, 255, 0.0)',
-              'rgba(255, 255, 255, 0.0)',
+              'rgba(255, 255, 255, 0.1)',
               'rgba(255, 255, 255, 0.3)'
             ]}
             locations={[0.0, 0.2, 0.4, 0.5, 0.5, 0.6, 0.8, 1.0]}
@@ -28,12 +48,12 @@ export default function App() {
             <LinearGradient
               colors={[
                 'rgba(255, 255, 255, 0.3)',
+                'rgba(255, 255, 255, 0.1)',
                 'rgba(255, 255, 255, 0.0)',
                 'rgba(255, 255, 255, 0.0)',
                 'rgba(255, 255, 255, 0.0)',
                 'rgba(255, 255, 255, 0.0)',
-                'rgba(255, 255, 255, 0.0)',
-                'rgba(255, 255, 255, 0.0)',
+                'rgba(255, 255, 255, 0.1)',
                 'rgba(255, 255, 255, 0.3)'
               ]}
               locations={[0.0, 0.2, 0.4, 0.5, 0.5, 0.6, 0.8, 1.0]}
@@ -47,17 +67,21 @@ export default function App() {
             </LinearGradient>
           </LinearGradient>
         </TouchableOpacity>
-        <StatusBar style="auto" />
+        {/* <StatusBar style="auto" /> */}
       </View>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
+  backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: 'cover', // or 'stretch'
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     flex: 1,
@@ -69,8 +93,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderColor: '#fff', // Color del borde blanco
     borderWidth: 1, // Grosor del borde
-    width: 200, // Ajusta el ancho del botón
-    height: 50, // Ajusta la altura del botón
+    width: 150, // Ajusta el ancho del botón
+    height: 60, // Ajusta la altura del botón
   },
   gradientHorizontal: {
     borderRadius: 20,
@@ -90,8 +114,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 15,
     color: '#000',
+    fontFamily: 'CustomFont', // Usa la fuente personalizada aquí
   },
   icon: {
     marginLeft: 10,
